@@ -1,8 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Códice de Tiamat - Versão Unchained</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37; --dark: #0a0a0a; --panel: #161616;
+            --text: #f5f1e8; --accent: #4a2b11; --danger: #962121; --safe: #2ecc71;
+        }
+        body { font-family: 'Crimson Text', serif; background: var(--dark); color: var(--text); margin: 0; padding-bottom: 50px; }
+        
+        /* Cabeçalho e Navegação */
+        .dm-header { background: #1a0f08; padding: 10px; border-bottom: 2px solid var(--gold); display: flex; justify-content: center; gap: 15px; position: sticky; top: 0; z-index: 100; }
+        .nav-tabs { display: flex; overflow-x: auto; background: #000; border-bottom: 1px solid var(--gold); scrollbar-width: none; }
+        .tab-btn { background: none; border: none; color: var(--gold); padding: 15px 20px; cursor: pointer; font-family: 'Cinzel'; font-size: 0.85rem; white-space: nowrap; transition: 0.2s; border-right: 1px solid #222; }
+        .tab-btn.active { background: var(--gold); color: black; font-weight: bold; }
+        
+        .container { max-width: 1400px; margin: auto; padding: 20px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Estilo dos Painéis */
+        .card { background: var(--panel); border: 1px solid #333; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); position: relative; }
+        h3 { color: var(--gold); font-family: 'Cinzel'; margin-top: 0; border-bottom: 2px solid var(--accent); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Tabelas do Conselho - Design Robusto */
+        .table-container { overflow-x: auto; margin-top: 10px; border-radius: 8px; border: 1px solid #333; }
+        table { width: 100%; border-collapse: collapse; background: #000; }
+        th, td { border: 1px solid #333; padding: 12px; text-align: center; }
+        th { background: #1a1a1a; color: var(--gold); font-family: 'Cinzel'; font-size: 0.8rem; }
+        .editable { cursor: pointer; transition: 0.2s; }
+        .editable:hover { background: #222; color: white; }
+        .row-total { background: #1a150a; font-weight: bold; font-size: 1.1rem; color: var(--gold); }
+
+        /* Inputs e Botões */
+        input, select, textarea { background: #000; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; }
+        input:focus { border-color: var(--gold); }
+        .btn { background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 4px; font-family: 'Cinzel'; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
+        .btn:hover { background: #fff; transform: translateY(-2px); }
+        .btn-add { background: #27ae60; color: white; padding: 5px 15px; font-size: 0.7rem; }
+        .btn-del { background: var(--danger); color: white; padding: 5px 10px; font-size: 0.7rem; }
+
+        /* Grade de NPCs e Itens */
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        
+        /* Baú de Sessões (PDFs) */
+        .session-box { background: #0c0c0c; border-left: 5px solid var(--gold); padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 4px; }
+        .session-info { flex-grow: 1; }
+        .session-info strong { color: var(--gold); display: block; font-size: 1.1rem; }
+
+        /* Mapa */
+        #map-frame { border: 3px solid #333; border-radius: 12px; overflow: auto; background: #000; height: 75vh; position: relative; }
+        #map-img { display: block; cursor: crosshair; }
+    </style>
     <title>D&D Campaign Tracker</title>
 </head>
 <body>
+
+<div class="dm-header">
+    <button class="btn" onclick="exportData()">📤 EXPORTAR BACKUP TOTAL</button>
+    <label class="btn" style="background:transparent; border:1px solid var(--gold); color:var(--gold)">
+        📥 IMPORTAR BACKUP <input type="file" style="display:none" onchange="importData(event)">
+    </label>
+</div>
+
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'tab-mapa')">📍 Mapa Mundi</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-diario')">📜 Baú de Sessões (PDF)</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-council')">🏛️ Council Scorecard</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-npcs')">👥 NPCs & Guildas</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-loot')">💰 Loot & Itens</button>
+</div>
+
+<div class="container">
+    
+    <div id="tab-mapa" class="tab-content active">
+        <div class="card">
+            <h3>Mapa de Faerûn <input type="file" onchange="uploadMap(event)" style="width: auto; font-size: 0.7rem;"></h3>
+            <div id="map-frame">
+                <img id="map-img" src="" alt="Faça upload do mapa da Costa da Espada">
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-diario" class="tab-content">
+        <div class="card">
+            <h3>Adicionar Nova Crónica (PDF/Docx)</h3>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="session-title" placeholder="Título da Sessão (Ex: Sessão 01 - O Começo)">
+                <input type="file" id="session-file-input" style="width: auto;">
+                <button class="btn" onclick="handleSessionUpload()">💾 Guardar</button>
+            </div>
+        </div>
+        <div id="session-display-list"></div>
+    </div>
+
+    <div id="tab-council" class="tab-content">
+        <div class="card">
+            <h3>Decisões do Conselho de Águas Profundas <button class="btn btn-add" onclick="addCouncilRow()">+ Novo Evento</button></h3>
+            <p><small>*Clique nos valores para editar as pontuações. Marque a caixa para aplicar ao total.</small></p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Evento / Ação dos Jogadores</th>
+                            <th>Harpistas</th><th>Manopla</th><th>Enclave</th><th>Lords</th><th>Zhents</th>
+                            <th>Status</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="council-table-body"></tbody>
+                    <tfoot>
+                        <tr class="row-total">
+                            <td>TOTAL DE APOIO ATUAL</td>
+                            <td id="res-h">0</td><td id="res-m">0</td><td id="res-e">0</td><td id="res-a">0</td><td id="res-z">0</td>
+                            <td colspan="2"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-npcs" class="tab-content">
+        <div class="card">
+            <h3>Criar Novo NPC ou Facção</h3>
+            <div class="grid-layout">
+                <input type="text" id="npc-in-name" placeholder="Nome do Personagem">
+                <input type="text" id="npc-in-title" placeholder="Título/Cargo">
+                <input type="text" id="npc-in-color" placeholder="Cor da borda (Ex: blue, #d4af37)">
+            </div>
+            <textarea id="npc-in-bio" placeholder="Notas de interpretação, segredos e lealdades..." style="margin-top:10px; height: 100px;"></textarea>
+            <button class="btn" style="margin-top:10px" onclick="addNewNPC()">💾 Registar no Códice</button>
+        </div>
+        <div id="npc-grid-display" class="grid-layout"></div>
+    </div>
+
+    <div id="tab-loot" class="tab-content">
+        <div class="grid-layout">
+            <div class="card">
+                <h3>🎲 Gerador de Tesouro (DMG)</h3>
+                <label>Nível do Desafio (CR):</label>
+                <select id="loot-cr-sel">
+                    <optgroup label="Individual">
+                        <option value="ind0">Individual (CR 0-4)</option>
+                        <option value="ind5">Individual (CR 5-10)</option>
+                        <option value="ind11">Individual (CR 11-16)</option>
+                    </optgroup>
+                    <optgroup label="Hoard (Tesouro Acumulado)">
+                        <option value="h0">Hoard (CR 0-4)</option>
+                        <option value="h5">Hoard (CR 5-10)</option>
+                        <option value="h11">Hoard (CR 11-16)</option>
+                    </optgroup>
+                </select>
+                <button class="btn" style="width:100%; margin-top:10px" onclick="rollLoot()">Rolar Dados de Tesouro</button>
+                <div class="result-box" id="loot-res-box">Aguardando ropagem...</div>
+            </div>
+
+            <div class="card">
+                <h3>⚔️ Cofre de Itens Mágicos</h3>
+                <textarea id="magic-items-list" style="height: 250px;" onchange="saveItems(this.value)" placeholder="Cole aqui a lista de itens encontrados pelo grupo..."></textarea>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- ESTADO INICIAL DO SISTEMA ---
+    let db = {
+        map: "",
+        sessions: [],
+        npcs: [],
+        council: [
+            {label: "Castelo Skyreach Possuído", h:1, m:1, e:1, a:1, z:1, active: false},
+            {label: "Viveiro de Dragões Destruído", h:0, m:1, e:0, a:1, z:0, active: false},
+            {label: "Varram Capturado Vivo", h:1, m:1, e:0, a:1, z:0, active: false}
+        ],
+        magicItems: ""
+    };
+
+    // --- CARREGAMENTO E SALVAMENTO ---
+    function save() { localStorage.setItem('tiamat_ultra_v5', JSON.stringify(db)); }
+    
+    function load() {
+        const data = localStorage.getItem('tiamat_ultra_v5');
+        if(data) db = JSON.parse(data);
+        renderAll();
+    }
+
+    // --- NAVEGAÇÃO ---
+    function openTab(e, id) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        e.currentTarget.classList.add('active');
+    }
+
+    // --- GESTÃO DE PDFs (SESSÕES) ---
+    function handleSessionUpload() {
+        const fileInput = document.getElementById('session-file-input');
+        const titleInput = document.getElementById('session-title');
+        if(!fileInput.files[0]) return alert("Seleciona um ficheiro!");
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            db.sessions.push({
+                title: titleInput.value || fileInput.files[0].name,
+                date: new Date().toLocaleDateString('pt-PT'),
+                content: e.target.result // Base64 do PDF/Docx
+            });
+            titleInput.value = "";
+            save(); renderSessions();
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+
+    function renderSessions() {
+        const list = document.getElementById('session-display-list');
+        list.innerHTML = '';
+        db.sessions.forEach((s, i) => {
+            list.innerHTML += `
+                <div class="session-box">
+                    <div class="session-info">
+                        <strong>${s.title}</strong>
+                        <small>Data de Registo: ${s.date}</small>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn" style="padding:5px 15px" onclick="downloadSession(${i})">👁️ Abrir</button>
+                        <button class="btn btn-del" onclick="db.sessions.splice(${i},1);save();renderSessions()">X</button>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function downloadSession(i) {
+        const s = db.sessions[i];
+        const link = document.createElement('a');
+        link.href = s.content;
+        link.download = s.title;
+        link.click();
+    }
+
+    // --- COUNCIL SCORECARD (Lógica Pura) ---
+    function renderCouncil() {
+        const body = document.getElementById('council-table-body');
+        body.innerHTML = '';
+        let t = {h:0, m:0, e:0, a:0, z:0};
+
+        db.council.forEach((ev, i) => {
+            if(ev.active) { 
+                t.h += ev.h; t.m += ev.m; t.e += ev.e; t.a += ev.a; t.z += ev.z; 
+            }
+            body.innerHTML += `
+                <tr>
+                    <td class="editable" onclick="editCouncil(${i}, 'label', 'text')">${ev.label}</td>
+                    <td class="editable" onclick="editCouncil(${i}, 'h', 'num')">${ev.h}</td>
+                    <td class="editable" onclick="editCouncil(${i}, 'm', 'num')">${ev.m}</td>
+                    <td class="editable" onclick="editCouncil(${i}, 'e', 'num')">${ev.e}</td>
+                    <td class="editable" onclick="editCouncil(${i}, 'a', 'num')">${ev.a}</td>
+                    <td class="editable" onclick="editCouncil(${i}, 'z', 'num')">${ev.z}</td>
+                    <td><input type="checkbox" ${ev.active?'checked':''} onchange="db.council[${i}].active=!db.council[${i}].active;save();renderCouncil()" style="width:20px; height:20px"></td>
+                    <td><button class="btn-del" onclick="db.council.splice(${i},1);save();renderCouncil()">X</button></td>
+                </tr>`;
+        });
+
+        document.getElementById('res-h').innerText = t.h;
+        document.getElementById('res-m').innerText = t.m;
+        document.getElementById('res-e').innerText = t.e;
+        document.getElementById('res-a').innerText = t.a;
+        document.getElementById('res-z').innerText = t.z;
+    }
+
+    function editCouncil(i, field, type) {
+        let val = prompt("Editar valor:", db.council[i][field]);
+        if(val !== null) {
+            db.council[i][field] = (type === 'num') ? parseInt(val) || 0 : val;
+            save(); renderCouncil();
+        }
+    }
+
+    function addCouncilRow() {
+        db.council.push({label: "Novo Evento", h:0, m:0, e:0, a:0, z:0, active: false});
+        save(); renderCouncil();
+    }
+
+    // --- NPCs ---
+    function addNewNPC() {
+        const name = document.getElementById('npc-in-name').value;
+        const title = document.getElementById('npc-in-title').value;
+        const color = document.getElementById('npc-in-color').value || 'var(--gold)';
+        const bio = document.getElementById('npc-in-bio').value;
+        
+        if(name) {
+            db.npcs.push({name, title, color, bio});
+            save(); renderNPCs();
+            document.getElementById('npc-in-name').value = "";
+            document.getElementById('npc-in-bio').value = "";
+        }
+    }
+
+    function renderNPCs() {
+        const grid = document.getElementById('npc-grid-display');
+        grid.innerHTML = '';
+        db.npcs.forEach((n, i) => {
+            grid.innerHTML += `
+                <div class="card" style="border-top: 5px solid ${n.color}">
+                    <h3>${n.name} <button class="btn-del" onclick="db.npcs.splice(${i},1);save();renderNPCs()">X</button></h3>
+                    <p style="color:var(--gold); font-weight:bold; margin-top:-10px">${n.title}</p>
+                    <p style="white-space: pre-wrap; font-size: 0.9rem; border-top: 1px solid #333; padding-top: 10px;">${n.bio}</p>
+                </div>`;
+        });
+    }
+
+    // --- TESOURO (Loot) ---
+    function rollLoot() {
+        const cr = document.getElementById('loot-cr-sel').value;
+        const out = document.getElementById('loot-res-box');
+        let res = "";
+
+        const tables = {
+            ind0: ["15 PC", "12 PP", "8 PO", "2 PO e 10 PP"],
+            h0: ["600 PO e 2 Gemas de 10 PO", "Pergaminho Nível 1 e 400 PO", "Poção de Cura e 500 PO"],
+            h5: ["Arma +1 e 1200 PO", "Armadura de Couro +1 e 1000 PO", "Anel de Proteção e 2000 PO"]
+        };
+        
+        const roll = Math.floor(Math.random() * 3);
+        res = tables[cr] ? tables[cr][roll] : "Mesa não implementada - Adicione via Códice!";
+        out.innerHTML = `<strong>Resultado:</strong> <br> ${res}`;
+    }
+
+    function saveItems(v) { db.magicItems = v; save(); }
+
+    // --- MAPA ---
+    function uploadMap(e) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            db.map = ev.target.result;
+            document.getElementById('map-img').src = db.map;
+            save();
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    }
+
+    // --- EXPORT/IMPORT ---
+    function exportData() {
+        const dataStr = JSON.stringify(db);
+        const blob = new Blob([dataStr], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `CAMPANHA_TIAMAT_${new Date().getTime()}.json`;
+        link.click();
+    }
+
+    function importData(e) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            db = JSON.parse(ev.target.result);
+            save();
+            location.reload();
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+
+    function renderAll() {
+        if(db.map) document.getElementById('map-img').src = db.map;
+        document.getElementById('magic-items-list').value = db.magicItems || "";
+        renderSessions();
+        renderCouncil();
+        renderNPCs();
+    }
+
+    window.onload = load;
+</script>
     <h1>Password Protected D&D Campaign Tracker</h1>
     <p>Welcome to the password-protected D&D campaign tracking system.</p>
     <form action="/submit" method="post">
@@ -11,4 +385,5 @@
         <button type="submit">Enter</button>
     </form>
 </body>
+</html>
 </html>
