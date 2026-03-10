@@ -3,277 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Screen - Rise of Tiamat</title>
+    <title>Master Screen - Tiamat Ultra</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #d4af37; --dark: #121212; --panel: #1e1e1e;
-            --text: #f5f1e8; --accent: #8b4513; --danger: #e74c3c; --safe: #27ae60;
+            --gold: #d4af37; --dark: #0f0f0f; --panel: #1a1a1a;
+            --text: #f5f1e8; --accent: #5e2f11; --danger: #ff4d4d;
         }
         body { font-family: 'Crimson Text', serif; background: var(--dark); color: var(--text); margin: 0; padding-bottom: 50px; }
         
-        .dm-toolbar { 
-            background: #2c1a10; padding: 12px; border-bottom: 2px solid var(--gold);
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px black;
-        }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        /* Menu e Tabs */
+        .dm-header { background: #2c1a10; padding: 10px; border-bottom: 3px solid var(--gold); display: flex; justify-content: center; gap: 20px; position: sticky; top: 0; z-index: 100; }
+        .nav-tabs { display: flex; overflow-x: auto; background: #111; border-bottom: 1px solid var(--gold); }
+        .tab-btn { background: none; border: none; color: var(--gold); padding: 15px 20px; cursor: pointer; font-family: 'Cinzel'; font-size: 0.85rem; white-space: nowrap; }
+        .tab-btn.active { background: var(--gold); color: black; }
         
-        /* Time Widget */
-        .time-widget {
-            background: rgba(0,0,0,0.5); border: 1px solid var(--gold); padding: 15px;
-            border-radius: 8px; display: flex; justify-content: space-around; align-items: center;
-            margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
-        }
-        .time-item label { display: block; font-family: 'Cinzel'; font-size: 0.7rem; color: var(--gold); text-align: center; }
-
-        /* Tabs */
-        .nav-tabs { display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; border-bottom: 1px solid var(--gold); }
-        .tab-btn { 
-            background: var(--panel); border: 1px solid var(--gold); border-bottom: none;
-            color: var(--gold); padding: 10px 20px; cursor: pointer; font-family: 'Cinzel';
-            border-radius: 8px 8px 0 0; white-space: nowrap;
-        }
-        .tab-btn.active { background: var(--gold); color: var(--dark); }
-        .tab-content { display: none; background: var(--panel); padding: 20px; border-radius: 0 0 8px 8px; border: 1px solid #333; }
+        .container { max-width: 1200px; margin: auto; padding: 20px; }
+        .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Cards & Grids */
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
-        .card { background: #1a1a1a; padding: 15px; border: 1px solid #444; border-radius: 8px; position: relative; }
-        .secret-card { border: 2px dashed var(--danger) !important; background: rgba(231, 76, 60, 0.05); }
+        /* Cards e Listas */
+        .card { background: var(--panel); border: 1px solid #444; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        h3 { color: var(--gold); font-family: 'Cinzel'; margin-top: 0; border-bottom: 1px solid var(--accent); }
         
-        /* Geradores UI */
-        .gen-box { background: #000; border: 1px solid var(--accent); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .gen-result { background: #1a1a1a; padding: 10px; border-left: 3px solid var(--gold); margin-top: 10px; color: var(--gold); font-weight: bold; min-height: 20px; white-space: pre-line; }
+        .file-item { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 10px; border-radius: 5px; margin-bottom: 5px; border: 1px solid #333; }
+        
+        /* Inputs */
+        input, select, textarea { background: #000; color: white; border: 1px solid var(--gold); padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; }
+        .btn { background: var(--gold); color: black; border: none; padding: 10px 20px; border-radius: 4px; font-family: 'Cinzel'; cursor: pointer; font-weight: bold; }
+        .btn-sm { padding: 5px 10px; font-size: 0.7rem; }
+        .dm-only { border: 2px dashed var(--danger) !important; padding: 10px; }
 
-        textarea { width: 100%; background: #000; color: #eee; border: 1px solid #333; padding: 8px; border-radius: 5px; min-height: 100px; font-family: inherit; }
-        input, select { background: #000; color: white; border: 1px solid var(--gold); padding: 5px; border-radius: 4px; }
-        .btn { background: var(--gold); color: var(--dark); border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-family: 'Cinzel'; font-weight: bold; }
-        .player-hidden { display: none !important; }
-
-        /* Mapa */
-        #map-wrapper { position: relative; border: 2px solid var(--gold); background: #000; overflow: auto; max-height: 60vh; border-radius: 8px; }
-        #map-img { width: 100%; display: block; min-width: 800px; }
-        .pin { position: absolute; width: 18px; height: 18px; background: var(--gold); border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); cursor: help; }
+        /* Scorecard */
+        .score-table { width: 100%; border-collapse: collapse; background: #111; font-size: 0.9rem; margin-top: 10px; }
+        .score-table th, .score-table td { border: 1px solid #333; padding: 8px; text-align: center; }
+        .score-table th { background: var(--accent); color: var(--gold); }
     </style>
 </head>
 <body>
 
-<div class="dm-toolbar">
-    <label><input type="checkbox" id="dm-mode" onchange="refreshView()" checked> 👑 MESTRE</label>
-    <button class="btn" style="font-size:0.7rem" onclick="exportData()">📤 EXPORTAR BACKUP</button>
-    <label class="btn" style="font-size:0.7rem; background:transparent; border:1px solid var(--gold); color:var(--gold)">
-        📥 IMPORTAR <input type="file" style="display:none" onchange="importData(event)">
+<div class="dm-header">
+    <label><input type="checkbox" id="dm-mode" onchange="refreshView()" checked style="width:auto"> 👑 MESTRE</label>
+    <button class="btn" onclick="exportData()">💾 EXPORTAR TUDO (JSON)</button>
+    <label class="btn" style="background:transparent; border:1px solid var(--gold); color:var(--gold)">
+        📂 IMPORTAR <input type="file" style="display:none" onchange="importData(event)">
     </label>
 </div>
 
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'tab-mapa')">📍 Mapa</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-files')">📁 Arquivos/PDFs</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-council')">🏛️ Conselho</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-npcs')">👥 NPCs</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-loot')">🎲 Loot</button>
+</div>
+
 <div class="container">
-    <div class="time-widget">
-        <div class="time-item"><label>Dia</label><input type="number" id="cur-day" value="1" onchange="updateTime()" style="width:40px"></div>
-        <div class="time-item"><label>Horário</label><input type="time" id="cur-hour" value="12:00" onchange="updateTime()"></div>
-        <div class="time-item"><label>Clima</label>
-            <select id="cur-weather" onchange="updateTime()">
-                <option>Ensolarado</option><option>Nublado</option><option>Chuva</option><option>Tempestade</option><option>Frio Nevoeiro</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'tab-mapa')">📍 Mapa</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-faccoes')">⚔️ Facções</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-npcs')">👤 NPCs/Players</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-gen')">🎲 Geradores</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-notas')">📝 Notas</button>
-    </div>
-
+    
     <div id="tab-mapa" class="tab-content active">
-        <div class="dm-only" style="margin-bottom:10px">Mapa: <input type="file" onchange="uploadMap(event)"></div>
-        <div id="map-wrapper" onclick="handleMapClick(event)">
-            <img id="map-img" src="" alt="Upload o mapa no PC">
+        <div class="dm-only card">Mapa Principal: <input type="file" onchange="uploadMap(event)"></div>
+        <div style="overflow: auto; border: 2px solid var(--gold); border-radius: 10px; background: #000;">
+            <img id="map-img" src="" style="width: 100%; min-width: 1000px; display: block;">
         </div>
     </div>
 
-    <div id="tab-faccoes" class="tab-content">
-        <div class="grid-cards" id="factions-list"></div>
+    <div id="tab-files" class="tab-content">
+        <h3>Repositório de Documentos (PDF, Docx, etc.)</h3>
+        <div class="dm-only card">
+            <p>Adicionar Relatório de Sessão ou Documento:</p>
+            <input type="file" id="file-upload" onchange="handleFileUpload(event)">
+            <p><small>*Arquivos muito grandes podem deixar o carregamento lento. Tente PDFs leves.</small></p>
+        </div>
+        
+        <div id="file-list" style="margin-top: 20px;">
+            </div>
     </div>
 
-    <div id="tab-gen" class="tab-content">
-        <div class="grid-cards">
-            <div class="gen-box">
-                <h4>Nomes Aleatórios</h4>
-                <select id="gen-race"><option value="h">Humano</option><option value="e">Elfo</option><option value="a">Anão</option><option value="d">Draconato</option></select>
-                <select id="gen-sex"><option value="m">Masc</option><option value="f">Fem</option></select>
-                <button class="btn" onclick="generateName()">Gerar</button>
-                <div class="gen-result" id="res-name"></div>
-            </div>
-            <div class="gen-box">
-                <h4>Tesouro por CD</h4>
-                <select id="gen-cr"><option value="low">CD 0-4</option><option value="mid">CD 5-10</option><option value="high">CD 11+</option></select>
-                <button class="btn" onclick="generateTreasure()">Gerar Loot</button>
-                <div class="gen-result" id="res-treasure"></div>
-            </div>
-            <div class="gen-box">
-                <h4>Gerador de Loja</h4>
-                <select id="gen-shop"><option value="f">Ferreiro</option><option value="a">Alquimista</option><option value="g">Geral</option></select>
-                <button class="btn" onclick="generateShop()">Gerar Estoque</button>
-                <div class="gen-result" id="res-shop"></div>
-            </div>
-        </div>
+    <div id="tab-council" class="tab-content">
+        <h3>Council Scorecard</h3>
+        <table class="score-table">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Harp</th><th>Gaunt</th><th>Encl</th><th>Lord</th><th>Zhent</th>
+                    <th>X</th>
+                </tr>
+            </thead>
+            <tbody id="council-body"></tbody>
+            <tfoot>
+                <tr style="color:var(--gold); font-weight:bold;">
+                    <td>TOTAL</td>
+                    <td id="t-h">0</td><td id="t-m">0</td><td id="t-e">0</td><td id="t-a">0</td><td id="t-z">0</td>
+                    <td>-</td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 
     <div id="tab-npcs" class="tab-content">
-        <div class="dm-only card">
-            <h4>Adicionar Novo</h4>
-            <input type="text" id="npc-name" placeholder="Nome">
-            <input type="text" id="npc-role" placeholder="Cargo/Classe">
-            <label><input type="checkbox" id="npc-secret"> Secreto?</label>
-            <button class="btn" onclick="addNPC()">+ Adicionar</button>
+        <div id="npc-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:15px;"></div>
+        <div class="dm-only card" style="margin-top:20px">
+            <h3>Novo NPC</h3>
+            <input type="text" id="npc-n" placeholder="Nome">
+            <textarea id="npc-d" placeholder="Descrição"></textarea>
+            <button class="btn" onclick="addNPC()">Salvar</button>
         </div>
-        <div class="grid-cards" id="npc-display"></div>
     </div>
 
-    <div id="tab-notas" class="tab-content">
-        <button class="btn" onclick="addNote()">+ Nova Nota</button>
-        <div id="notes-display" class="grid-cards" style="margin-top:20px"></div>
+    <div id="tab-loot" class="tab-content">
+        <div class="card">
+            <h3>Gerador de Tesouro</h3>
+            <button class="btn" onclick="document.getElementById('res-l').innerText = 'Tesouro: ' + (Math.floor(Math.random()*100)+20) + ' PO e Poção de Cura';">Gerar!</button>
+            <div id="res-l" style="margin-top:10px; font-weight:bold"></div>
+        </div>
     </div>
+
 </div>
 
 <script>
     let state = {
-        time: { day: 1, hour: "12:00", weather: "Ensolarado" },
-        map: "", pins: [],
-        factions: { "Harpers": 0, "Lords Alliance": 0, "Emerald Enclave": 0, "Order of Gauntlet": 0, "Zhentarim": 0 },
-        npcs: [], notes: []
+        map: "",
+        council: {},
+        npcs: [],
+        files: [] // {name: "", type: "", data: ""}
     };
 
-    // DADOS PARA GERADORES
-    const names = {
-        h: { m: ["Alaric", "Dorn", "Kellen", "Oren"], f: ["Lyra", "Mara", "Sela", "Zana"] },
-        e: { m: ["Adran", "Erevan", "Theren"], f: ["Arwen", "Beth", "Keyleth"] },
-        a: { m: ["Bruenor", "Flint", "Thorin"], f: ["Audhild", "Dagnal", "Vistra"] },
-        d: { m: ["Arjhan", "Balasar", "Tarhun"], f: ["Akra", "Biri", "Kava"] }
-    };
+    const COUNCIL_DATA = [
+        { id: 'skyreach', label: 'Castelo Skyreach', h:1, m:1, e:1, a:1, z:1 },
+        { id: 'hatchery', label: 'Viveiro Destruído', h:0, m:1, e:0, a:1, z:0 },
+        { id: 'rezmir', label: 'Rezmir Morta', h:0, m:1, e:1, a:1, z:0 }
+    ];
 
-    const treasures = {
-        low: ["15 PO e uma Gema de 10 PO", "22 PO e Poção de Cura", "8 PO e um Mapa do Tesouro"],
-        mid: ["120 PO e Espada +1", "85 PO e Pergaminho de Bola de Fogo", "150 PO e Anel de Proteção"],
-        high: ["800 PO e Cajado do Mago", "1200 PO e Armadura de Placas +1", "Gema de 500 PO"]
-    };
+    function save() { localStorage.setItem('tiamat_v4', JSON.stringify(state)); }
 
-    const shops = {
-        f: ["Espada Curta (10po)", "Escudo (10po)", "Cota de Malha (75po)", "Adaga (2po)"],
-        a: ["Poção de Cura (50po)", "Antitoxina (50po)", "Fogo Alquímico (50po)"],
-        g: ["Corda 15m (1po)", "Ração (5pp)", "Tocha (1pc)", "Mochila (2po)"]
-    };
-
-    // FUNÇÕES DE GERAÇÃO
-    function generateName() {
-        const r = document.getElementById('gen-race').value;
-        const s = document.getElementById('gen-sex').value;
-        const list = names[r][s];
-        document.getElementById('res-name').innerText = list[Math.floor(Math.random()*list.length)] + " " + (names.h.m[Math.floor(Math.random()*4)]);
-    }
-
-    function generateTreasure() {
-        const cr = document.getElementById('gen-cr').value;
-        document.getElementById('res-treasure').innerText = treasures[cr][Math.floor(Math.random()*treasures[cr].length)];
-    }
-
-    function generateShop() {
-        const type = document.getElementById('gen-shop').value;
-        let res = "";
-        for(let i=0; i<3; i++) res += shops[type][Math.floor(Math.random()*shops[type].length)] + "\n";
-        document.getElementById('res-shop').innerText = res;
-    }
-
-    // LÓGICA CORE (SAVE/LOAD/UI)
-    function save() { localStorage.setItem('tiamat_final_v3', JSON.stringify(state)); }
     function load() {
-        const saved = localStorage.getItem('tiamat_final_v3');
-        if(saved) {
-            state = JSON.parse(saved);
-            if(state.map) document.getElementById('map-img').src = state.map;
-            document.getElementById('cur-day').value = state.time.day;
-            document.getElementById('cur-hour').value = state.time.hour;
-            document.getElementById('cur-weather').value = state.time.weather;
-        }
+        const d = localStorage.getItem('tiamat_v4');
+        if(d) state = JSON.parse(d);
+        if(state.map) document.getElementById('map-img').src = state.map;
         refreshView();
     }
 
-    function updateTime() {
-        state.time.day = document.getElementById('cur-day').value;
-        state.time.hour = document.getElementById('cur-hour').value;
-        state.time.weather = document.getElementById('cur-weather').value;
-        save();
+    // --- UPLOAD DE ARQUIVOS ---
+    function handleFileUpload(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            state.files.push({
+                name: file.name,
+                type: file.type,
+                data: evt.target.result // Base64 do arquivo
+            });
+            save();
+            renderFiles();
+        };
+        reader.readAsDataURL(file);
     }
 
-    function refreshView() {
-        const isDM = document.getElementById('dm-mode').checked;
-        document.querySelectorAll('.dm-only').forEach(el => el.classList.toggle('player-hidden', !isDM));
-        renderFactions(isDM); renderNPCs(isDM); renderNotes(isDM); renderPins(isDM);
+    function renderFiles() {
+        const list = document.getElementById('file-list');
+        list.innerHTML = '';
+        state.files.forEach((f, i) => {
+            list.innerHTML += `
+                <div class="file-item">
+                    <span>📄 ${f.name}</span>
+                    <div>
+                        <button class="btn btn-sm" onclick="downloadFile(${i})">Abrir/Baixar</button>
+                        <button class="btn btn-sm btn-danger" onclick="state.files.splice(${i},1);save();renderFiles()">Apagar</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function downloadFile(i) {
+        const f = state.files[i];
+        const link = document.createElement('a');
+        link.href = f.data;
+        link.download = f.name;
+        link.click();
+    }
+
+    // --- LOGICA GERAL ---
+    function openTab(e, id) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        e.currentTarget.classList.add('active');
+    }
+
+    function renderCouncil() {
+        const b = document.getElementById('council-body');
+        b.innerHTML = '';
+        let t = {h:0, m:0, e:0, a:0, z:0};
+        COUNCIL_DATA.forEach(ev => {
+            const active = state.council[ev.id];
+            if(active) { t.h+=ev.h; t.m+=ev.m; t.e+=ev.e; t.a+=ev.a; t.z+=ev.z; }
+            b.innerHTML += `<tr><td>${ev.label}</td><td>${ev.h}</td><td>${ev.m}</td><td>${ev.e}</td><td>${ev.a}</td><td>${ev.z}</td>
+                <td><input type="checkbox" style="width:auto" ${active?'checked':''} onchange="state.council['${ev.id}']=!state.council['${ev.id}'];save();renderCouncil()"></td></tr>`;
+        });
+        document.getElementById('t-h').innerText = t.h;
+        document.getElementById('t-m').innerText = t.m;
+        document.getElementById('t-e').innerText = t.e;
+        document.getElementById('t-a').innerText = t.a;
+        document.getElementById('t-z').innerText = t.z;
+    }
+
+    function uploadMap(e) {
+        const r = new FileReader();
+        r.onload = (ev) => { state.map = ev.target.result; document.getElementById('map-img').src = state.map; save(); };
+        r.readAsDataURL(e.target.files[0]);
     }
 
     function addNPC() {
-        const name = document.getElementById('npc-name').value;
-        const role = document.getElementById('npc-role').value;
-        const secret = document.getElementById('npc-secret').checked;
-        if(name) { state.npcs.push({name, role, secret, notes: ""}); save(); refreshView(); document.getElementById('npc-name').value = ''; }
+        const n = document.getElementById('npc-n').value;
+        const d = document.getElementById('npc-d').value;
+        if(n) { state.npcs.push({n, d}); save(); refreshView(); }
     }
 
-    function renderNPCs(isDM) {
-        const div = document.getElementById('npc-display'); div.innerHTML = '';
-        state.npcs.forEach((n, i) => {
-            if(!isDM && n.secret) return;
-            div.innerHTML += `<div class="card ${n.secret ? 'secret-card' : ''}"><strong>${n.name}</strong> ${n.secret ? '🔒' : ''}<br><small>${n.role}</small><textarea onchange="state.npcs[${i}].notes=this.value;save()">${n.notes||''}</textarea>${isDM ? `<button onclick="state.npcs.splice(${i},1);save();refreshView()">Remover</button>` : ''}</div>`;
+    function refreshView() {
+        renderFiles();
+        renderCouncil();
+        const grid = document.getElementById('npc-grid');
+        grid.innerHTML = '';
+        state.npcs.forEach((npc, i) => {
+            grid.innerHTML += `<div class="card"><h3>${npc.n}</h3><p>${npc.d}</p><button class="btn btn-sm btn-danger" onclick="state.npcs.splice(${i},1);save();refreshView()">Remover</button></div>`;
         });
     }
 
-    function addNote() {
-        const t = prompt("Título:");
-        if(t) { state.notes.push({title: t, content: "", secret: confirm("Secreta?")}); save(); refreshView(); }
+    function exportData() {
+        const a = document.createElement('a');
+        a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+        a.download = "tiamat_master_v4.json";
+        a.click();
     }
 
-    function renderNotes(isDM) {
-        const div = document.getElementById('notes-display'); div.innerHTML = '';
-        state.notes.forEach((n, i) => {
-            if(!isDM && n.secret) return;
-            div.innerHTML += `<div class="card ${n.secret ? 'secret-card' : ''}"><strong>${n.title}</strong><textarea onchange="state.notes[${i}].content=this.value;save()">${n.content}</textarea></div>`;
-        });
+    function importData(e) {
+        const r = new FileReader();
+        r.onload = (ev) => { state = JSON.parse(ev.target.result); save(); location.reload(); };
+        r.readAsText(e.target.files[0]);
     }
 
-    function renderFactions(isDM) {
-        const div = document.getElementById('factions-list'); div.innerHTML = '';
-        for(let f in state.factions) {
-            const v = state.factions[f];
-            div.innerHTML += `<div class="faction-card"><small>${f}</small><span class="score-val ${v < 0 ? 'neg' : 'pos'}">${v}</span><div class="${isDM?'':'player-hidden'}"><input type="number" value="${v}" onchange="state.factions['${f}']=parseInt(this.value);save();renderFactions(true)"></div></div>`;
-        }
-    }
-
-    function uploadMap(e) { const r = new FileReader(); r.onload = (ev) => { state.map = ev.target.result; document.getElementById('map-img').src = state.map; save(); }; r.readAsDataURL(e.target.files[0]); }
-    function handleMapClick(e) {
-        if(!document.getElementById('dm-mode').checked) return;
-        const rect = document.getElementById('map-img').getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        const label = prompt("Local:");
-        if(label) { state.pins.push({x, y, label, secret: confirm("Secreta?")}); save(); renderPins(true); }
-    }
-    function renderPins(isDM) {
-        const w = document.getElementById('map-wrapper'); w.querySelectorAll('.pin').forEach(p => p.remove());
-        state.pins.forEach((p, i) => {
-            if(!isDM && p.secret) return;
-            const d = document.createElement('div'); d.className = 'pin'; d.style.left = p.x + '%'; d.style.top = p.y + '%'; d.title = p.label;
-            if(isDM) d.onclick = () => { if(confirm("Remover?")) { state.pins.splice(i,1); save(); renderPins(true); } };
-            w.appendChild(d);
-        });
-    }
-
-    function exportData() { const data = JSON.stringify(state); const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(data); a.download = "tiamat_v3.json"; a.click(); }
-    function importData(e) { const r = new FileReader(); r.onload = (ev) => { state = JSON.parse(ev.target.result); save(); location.reload(); }; r.readAsText(e.target.files[0]); }
-    function openTab(e, id) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active'); }
-    
     load();
 </script>
 </body>
