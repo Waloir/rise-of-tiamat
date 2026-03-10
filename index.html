@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Códice de Tiamat - DM Assistant</title>
+    <title>Códice de Tiamat - DM Master</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -18,6 +18,7 @@
         --accent: #4a2b11;
         --danger: #962121;
         --safe: #2ecc71;
+        --info: #3498db;
     }
 
     html, body {
@@ -26,11 +27,9 @@
         font-family: 'Crimson Text', serif;
         background: var(--dark);
         color: var(--text);
-        -webkit-user-select: none;
-        user-select: none;
     }
 
-    /* LOGIN SCREEN */
+    /* LOGIN */
     .login-container {
         position: fixed;
         top: 0;
@@ -64,13 +63,6 @@
         margin-bottom: 10px;
     }
 
-    .login-subtitle {
-        color: #aaa;
-        font-size: 0.9rem;
-        margin-bottom: 30px;
-        font-style: italic;
-    }
-
     .login-input {
         width: 100%;
         padding: 15px;
@@ -80,15 +72,8 @@
         color: var(--text);
         font-size: 1.1rem;
         border-radius: 6px;
-        font-family: inherit;
         text-align: center;
         letter-spacing: 2px;
-    }
-
-    .login-input:focus {
-        outline: none;
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        border-color: white;
     }
 
     .login-btn {
@@ -102,36 +87,23 @@
         font-size: 1.1rem;
         font-weight: bold;
         cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .login-btn:hover {
-        background: white;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
     }
 
     .login-error {
         color: var(--danger);
         margin-bottom: 15px;
-        font-size: 0.9rem;
     }
 
-    .login-hidden {
-        display: none !important;
-    }
+    .login-hidden { display: none !important; }
 
-    /* MAIN APP */
+    /* APP */
     .app-container {
         display: none;
         flex-direction: column;
         height: 100vh;
-        width: 100%;
     }
 
-    .app-container.visible {
-        display: flex;
-    }
+    .app-container.visible { display: flex; }
 
     /* HEADER */
     .dm-header {
@@ -142,15 +114,15 @@
         justify-content: space-between;
         align-items: center;
         gap: 10px;
-        flex-wrap: wrap;
         position: sticky;
         top: 0;
         z-index: 100;
+        flex-wrap: wrap;
     }
 
     .header-title {
         font-family: 'Cinzel';
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         color: var(--gold);
         flex: 1;
     }
@@ -160,7 +132,7 @@
         gap: 8px;
     }
 
-    .logout-btn {
+    .logout-btn, .export-btn {
         background: var(--danger);
         color: white;
         border: none;
@@ -170,26 +142,19 @@
         font-family: 'Cinzel';
         font-size: 0.7rem;
         font-weight: bold;
-        transition: 0.3s;
     }
 
-    .logout-btn:hover {
-        background: #c93333;
+    .export-btn {
+        background: var(--info);
     }
 
-    /* NAVIGATION TABS */
+    /* TABS */
     .nav-tabs {
         display: flex;
         overflow-x: auto;
         background: #000;
         border-bottom: 1px solid var(--gold);
-        scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
-        gap: 0;
-    }
-
-    .nav-tabs::-webkit-scrollbar {
-        display: none;
     }
 
     .tab-btn {
@@ -201,12 +166,10 @@
         font-family: 'Cinzel';
         font-size: 0.8rem;
         white-space: nowrap;
-        transition: 0.2s;
         border-right: 1px solid #222;
         flex-shrink: 0;
     }
 
-    .tab-btn:active,
     .tab-btn.active {
         background: var(--gold);
         color: black;
@@ -227,19 +190,8 @@
         padding: 15px;
     }
 
-    .tab-content {
-        display: none;
-    }
-
-    .tab-content.active {
-        display: block;
-        animation: fadeIn 0.3s ease-in;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
     /* CARDS */
     .card {
@@ -249,20 +201,18 @@
         padding: 15px;
         margin-bottom: 15px;
         box-shadow: 0 5px 20px rgba(0,0,0,0.7);
-        position: relative;
     }
 
     h3 {
         color: var(--gold);
         font-family: 'Cinzel';
-        margin-top: 0;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         border-bottom: 2px solid var(--accent);
         padding-bottom: 8px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     /* INPUTS */
@@ -282,7 +232,6 @@
     input:focus, select:focus, textarea:focus {
         border-color: var(--gold);
         outline: none;
-        box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
     }
 
     /* BUTTONS */
@@ -296,32 +245,22 @@
         cursor: pointer;
         font-weight: bold;
         font-size: 0.85rem;
-        transition: 0.3s;
-        white-space: nowrap;
         display: inline-block;
     }
 
-    .btn:active {
-        background: white;
-        transform: scale(0.95);
-    }
-
-    .btn-add {
-        background: var(--safe);
-        color: white;
+    .btn-small {
         padding: 6px 10px;
         font-size: 0.7rem;
     }
 
-    .btn-del {
+    .btn-danger {
         background: var(--danger);
         color: white;
-        padding: 6px 10px;
-        font-size: 0.7rem;
     }
 
-    .btn-del:active {
-        background: #c93333;
+    .btn-success {
+        background: var(--safe);
+        color: white;
     }
 
     /* TABLES */
@@ -337,7 +276,7 @@
         width: 100%;
         border-collapse: collapse;
         background: #000;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     th, td {
@@ -350,24 +289,23 @@
         background: #1a1a1a;
         color: var(--gold);
         font-family: 'Cinzel';
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: bold;
     }
 
-    .editable {
-        cursor: pointer;
-        transition: 0.2s;
-        user-select: text;
-    }
-
-    .editable:active {
-        background: #222;
-    }
+    .editable { cursor: pointer; user-select: text; }
+    .editable:active { background: #222; }
 
     .row-total {
         background: #1a150a;
         font-weight: bold;
         color: var(--gold);
+    }
+
+    .row-council {
+        background: #0a0a0a;
+        font-weight: bold;
+        color: #aaa;
     }
 
     /* GRID */
@@ -383,124 +321,129 @@
         }
     }
 
-    @media (min-width: 1024px) {
-        .grid-layout {
-            grid-template-columns: repeat(3, 1fr);
-        }
+    /* NPC CARD */
+    .npc-card {
+        border-top: 5px solid;
+        padding: 15px;
+        border-radius: 4px;
+        background: #0c0c0c;
+        margin-bottom: 10px;
     }
 
-    /* SESSION BOX */
-    .session-box {
+    .npc-name {
+        color: var(--gold);
+        font-family: 'Cinzel';
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .npc-title {
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+
+    .npc-detail {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        margin: 5px 0;
+        color: #ddd;
+    }
+
+    /* NOTES */
+    .note-item {
         background: #0c0c0c;
-        border-left: 4px solid var(--gold);
+        border-left: 3px solid var(--gold);
         padding: 12px;
         margin-bottom: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
         border-radius: 4px;
-        flex-wrap: wrap;
     }
 
-    .session-info {
-        flex-grow: 1;
-        min-width: 150px;
+    .note-date {
+        color: #888;
+        font-size: 0.8rem;
+        margin-bottom: 5px;
     }
 
-    .session-info strong {
+    .note-text {
+        color: var(--text);
+        font-size: 0.9rem;
+    }
+
+    /* SESSION DATA */
+    .session-data {
+        background: #0c0c0c;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+    .session-data h4 {
         color: var(--gold);
-        display: block;
+        margin-bottom: 10px;
         font-size: 0.95rem;
     }
 
-    .session-info small {
-        color: #888;
-        font-size: 0.8rem;
-    }
-
-    .session-buttons {
+    .player-list {
         display: flex;
-        gap: 8px;
         flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
     }
 
-    /* MAP */
-    #map-frame {
-        border: 2px solid #333;
-        border-radius: 8px;
-        overflow: auto;
-        background: #000;
-        height: 50vh;
-        position: relative;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    #map-img {
-        display: block;
-        cursor: crosshair;
-        width: 100%;
-        height: auto;
-    }
-
-    /* RESPONSIVE ADJUSTMENTS */
-    @media (max-width: 480px) {
-        .login-box {
-            padding: 25px;
-        }
-
-        .login-title {
-            font-size: 1.8rem;
-        }
-
-        .header-title {
-            font-size: 1rem;
-        }
-
-        .tab-btn {
-            padding: 10px 12px;
-            font-size: 0.7rem;
-        }
-
-        h3 {
-            font-size: 1rem;
-        }
-
-        .card {
-            padding: 12px;
-        }
-
-        table {
-            font-size: 0.75rem;
-        }
-
-        th, td {
-            padding: 6px 4px;
-        }
-
-        .grid-layout {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    /* UTILITIES */
-    .hidden-password-only {
-        display: none;
-    }
-
-    .result-box {
-        background: #000;
-        border: 1px solid #333;
-        padding: 15px;
-        border-radius: 4px;
-        margin-top: 10px;
-        color: var(--gold);
-        font-family: 'Cinzel';
-        text-align: center;
-        min-height: 50px;
+    .player-badge {
+        background: var(--info);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 5px;
+    }
+
+    .remove-player {
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    /* COMBAT */
+    .combatant-item {
+        background: #0c0c0c;
+        border-left: 3px solid;
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .combatant-name {
+        font-weight: bold;
+        color: var(--gold);
+    }
+
+    .combatant-init {
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    .combatant-hp {
+        text-align: center;
+    }
+
+    @media (max-width: 480px) {
+        .login-title { font-size: 1.8rem; }
+        .header-title { font-size: 1rem; }
+        .tab-btn { padding: 10px 12px; font-size: 0.7rem; }
+        h3 { font-size: 1rem; }
+        table { font-size: 0.7rem; }
+        th, td { padding: 6px 4px; }
+        .combatant-item {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 ```
@@ -508,91 +451,65 @@
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 
 <div class="login-container" id="login-screen">
     <div class="login-box">
         <div class="login-title">🐉</div>
         <h2 class="login-title" style="font-size: 1.8rem; margin-top: 0;">CÓDICE DE TIAMAT</h2>
-        <p class="login-subtitle">Ferramental Secreto do Mestre</p>
+        <p style="color: #aaa; margin-bottom: 30px;">Apenas para Mestres Autorizados</p>
 
 ```
     <div class="login-error" id="error-msg"></div>
     
-    <input type="password" class="login-input" id="password-input" placeholder="Digite a Senha..." autocomplete="off">
-    <button class="login-btn" onclick="checkPassword()">ENTRAR NA CÂMARA SECRETA</button>
-    
-    <p style="margin-top: 20px; color: #888; font-size: 0.8rem;">
-        🔐 Apenas para Mestres Autorizados
-    </p>
+    <input type="password" class="login-input" id="password-input" placeholder="Senha..." autocomplete="off">
+    <button class="login-btn" onclick="checkPassword()">ENTRAR</button>
 </div>
 ```
 
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 
 <div class="app-container" id="app-container">
 
 ```
-<!-- HEADER -->
 <div class="dm-header">
     <div class="header-title">🐉 CÓDICE DE TIAMAT</div>
     <div class="header-buttons">
-        <button class="btn" style="padding: 8px 12px; font-size: 0.7rem;" onclick="exportData()">💾 BACKUP</button>
+        <button class="export-btn" onclick="exportData()">💾 BACKUP</button>
         <button class="logout-btn" onclick="logout()">🔓 SAIR</button>
     </div>
 </div>
 
-<!-- NAVIGATION -->
 <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab(event, 'tab-mapa')">📍 Mapa</button>
-    <button class="tab-btn" onclick="switchTab(event, 'tab-council')">🏛️ Conselho</button>
+    <button class="tab-btn active" onclick="switchTab(event, 'tab-council')">🏛️ Conselho</button>
     <button class="tab-btn" onclick="switchTab(event, 'tab-npcs')">👥 NPCs</button>
-    <button class="tab-btn" onclick="switchTab(event, 'tab-sessions')">📜 Sessões</button>
+    <button class="tab-btn" onclick="switchTab(event, 'tab-session')">📅 Sessão</button>
+    <button class="tab-btn" onclick="switchTab(event, 'tab-combat')">⚔️ Combate</button>
+    <button class="tab-btn" onclick="switchTab(event, 'tab-notes')">📝 Notas</button>
     <button class="tab-btn" onclick="switchTab(event, 'tab-loot')">💰 Loot</button>
 </div>
 
-<!-- CONTENT -->
 <div class="content-area">
     <div class="container">
 
-        <!-- MAPA -->
-        <div id="tab-mapa" class="tab-content active">
-            <div class="card">
-                <h3>Mapa de Faerûn</h3>
-                <label style="font-size: 0.9rem; color: #aaa; display: block; margin-bottom: 10px;">
-                    📤 Fazer upload do mapa (PNG/JPG)
-                </label>
-                <input type="file" onchange="uploadMap(event)" accept="image/*">
-                <div id="map-frame">
-                    <img id="map-img" src="" alt="Nenhum mapa carregado" style="padding: 20px; text-align: center; color: #666;">
-                </div>
-            </div>
-        </div>
-
         <!-- CONSELHO -->
-        <div id="tab-council" class="tab-content">
+        <div id="tab-council" class="tab-content active">
             <div class="card">
-                <h3>
-                    Decisões do Conselho
-                    <button class="btn btn-add" onclick="addCouncilRow()">+ EVENTO</button>
-                </h3>
-                <p style="font-size: 0.8rem; color: #aaa; margin: 10px 0;">
-                    Clique nos valores para editar. Marque a caixa para contar.
-                </p>
+                <h3>Scorecard do Conselho</h3>
+                <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 10px;">Marque os eventos conforme ocorrem.</p>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th style="min-width: 150px;">EVENTO</th>
-                                <th style="min-width: 40px;">H</th>
-                                <th style="min-width: 40px;">M</th>
-                                <th style="min-width: 40px;">E</th>
-                                <th style="min-width: 40px;">L</th>
-                                <th style="min-width: 40px;">Z</th>
-                                <th style="min-width: 50px;">✓</th>
-                                <th style="min-width: 30px;">X</th>
+                                <th style="min-width: 120px;">EVENTO</th>
+                                <th style="min-width: 35px;">H</th>
+                                <th style="min-width: 35px;">O</th>
+                                <th style="min-width: 35px;">E</th>
+                                <th style="min-width: 35px;">L</th>
+                                <th style="min-width: 35px;">C</th>
+                                <th style="min-width: 40px;">✓</th>
                             </tr>
                         </thead>
                         <tbody id="council-table-body"></tbody>
@@ -600,11 +517,11 @@
                             <tr class="row-total">
                                 <td>TOTAL</td>
                                 <td id="res-h">0</td>
-                                <td id="res-m">0</td>
+                                <td id="res-o">0</td>
                                 <td id="res-e">0</td>
                                 <td id="res-l">0</td>
-                                <td id="res-z">0</td>
-                                <td colspan="2"></td>
+                                <td id="res-c">0</td>
+                                <td></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -615,39 +532,78 @@
         <!-- NPCs -->
         <div id="tab-npcs" class="tab-content">
             <div class="card">
-                <h3>Criar NPC</h3>
-                <input type="text" id="npc-in-name" placeholder="Nome do NPC">
-                <input type="text" id="npc-in-title" placeholder="Título/Facção">
-                <input type="text" id="npc-in-color" placeholder="Cor (ex: blue, red, gold)">
-                <textarea id="npc-in-bio" placeholder="Notas secretas..." style="height: 80px;"></textarea>
-                <button class="btn" onclick="addNewNPC()" style="width: 100%;">💾 GUARDAR NPC</button>
+                <h3>Delegados & Facções</h3>
+                <div id="npc-display"></div>
             </div>
-            <div id="npc-grid-display" class="grid-layout"></div>
+
+            <div class="card">
+                <h3>Adicionar Novo NPC</h3>
+                <input type="text" id="new-npc-name" placeholder="Nome">
+                <input type="text" id="new-npc-title" placeholder="Título/Facção">
+                <input type="text" id="new-npc-color" placeholder="Cor (ex: #3498db)">
+                <textarea id="new-npc-desc" placeholder="Aparência e descrição..." style="height: 60px;"></textarea>
+                <textarea id="new-npc-motivations" placeholder="Motivações e objetivos..." style="height: 60px;"></textarea>
+                <textarea id="new-npc-relationships" placeholder="Relações com outros NPCs..." style="height: 60px;"></textarea>
+                <button class="btn" onclick="addNewNPC()" style="width: 100%;">➕ GUARDAR NPC</button>
+            </div>
         </div>
 
-        <!-- SESSÕES -->
-        <div id="tab-sessions" class="tab-content">
+        <!-- SESSÃO -->
+        <div id="tab-session" class="tab-content">
             <div class="card">
-                <h3>Arquivar Sessão</h3>
-                <input type="text" id="session-title" placeholder="Título da sessão">
-                <input type="file" id="session-file-input" accept=".pdf,.docx,.doc,.txt">
-                <button class="btn" onclick="handleSessionUpload()" style="width: 100%;">💾 ARQUIVAR</button>
+                <h3>Dados da Sessão</h3>
+                <h4 style="color: var(--gold); margin: 15px 0 10px 0; border: none; font-size: 0.95rem;">Data da Sessão</h4>
+                <input type="date" id="session-date">
+                
+                <h4 style="color: var(--gold); margin: 15px 0 10px 0; border: none; font-size: 0.95rem;">Jogadores Presentes</h4>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" id="player-name" placeholder="Nome do jogador">
+                    <button class="btn btn-success btn-small" onclick="addPlayer()">➕</button>
+                </div>
+                <div class="player-list" id="player-list"></div>
+
+                <h4 style="color: var(--gold); margin: 15px 0 10px 0; border: none; font-size: 0.95rem;">Resumo da Sessão</h4>
+                <textarea id="session-summary" placeholder="O que aconteceu na sessão..." style="height: 100px;"></textarea>
+                <button class="btn" onclick="saveSessionData()" style="width: 100%; margin-top: 10px;">💾 GUARDAR DADOS</button>
             </div>
-            <div id="session-display-list"></div>
+        </div>
+
+        <!-- COMBATE -->
+        <div id="tab-combat" class="tab-content">
+            <div class="card">
+                <h3>Iniciativa & Combate</h3>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" id="combatant-name" placeholder="Nome do combatente">
+                    <input type="number" id="combatant-init" placeholder="Iniciativa" style="width: 120px;">
+                    <input type="number" id="combatant-hp" placeholder="HP" style="width: 100px;">
+                    <button class="btn btn-success btn-small" onclick="addCombatant()">➕</button>
+                </div>
+                <div id="combatant-list"></div>
+                <button class="btn btn-danger btn-small" onclick="clearCombat()" style="margin-top: 10px;">🔄 LIMPAR COMBATE</button>
+            </div>
+        </div>
+
+        <!-- NOTAS -->
+        <div id="tab-notes" class="tab-content">
+            <div class="card">
+                <h3>Adicionar Nota</h3>
+                <textarea id="new-note" placeholder="Escreva sua nota aqui..." style="height: 80px;"></textarea>
+                <button class="btn" onclick="addNote()" style="width: 100%; margin-top: 10px;">📝 GUARDAR NOTA</button>
+            </div>
+            <div id="notes-display"></div>
         </div>
 
         <!-- LOOT -->
         <div id="tab-loot" class="tab-content">
             <div class="card">
                 <h3>Gerador de Tesouro</h3>
-                <label style="font-size: 0.9rem; color: #aaa;">Nível do Desafio (CR):</label>
                 <select id="loot-cr-sel">
                     <option value="h0">Hoard CR 0-4</option>
                     <option value="h5">Hoard CR 5-10</option>
                     <option value="h11">Hoard CR 11-16</option>
                 </select>
                 <button class="btn" onclick="rollLoot()" style="width: 100%;">🎲 ROLAR TESOURO</button>
-                <div class="result-box" id="loot-res-box">Aguardando resultado...</div>
+                <div style="background: #000; border: 1px solid #333; padding: 15px; border-radius: 4px; margin-top: 10px; color: var(--gold); text-align: center; min-height: 50px; display: flex; align-items: center; justify-content: center;" id="loot-res-box">Aguardando...</div>
             </div>
 
             <div class="card">
@@ -663,80 +619,78 @@
 </div>
 
 <script>
-    // ===== SISTEMA DE PASSWORD =====
-    const MASTER_PASSWORD = "tiamat2024"; // MUDE ISTO!
+    const MASTER_PASSWORD = "tiamat2024";
+
+    let db = {
+        council: [],
+        customNpcs: [],
+        sessionData: {date: "", players: [], summary: ""},
+        combatants: [],
+        notes: [],
+        magicItems: ""
+    };
+
+    const MAIN_NPCS = [
+        {name: "Leosin Erlanthar", title: "Harpers - Monge/Ranger", faction: "Harpers", color: "#3498db", desc: "Monge e Ranger dos Harpers. Principal contato com o conselho.", motivations: "Derrotar a Seita do Dragão", relationships: "Remi Haventree (colega Harper)"},
+        {name: "Sir Isteval", title: "Harpers - Cavaleiro", faction: "Harpers", color: "#3498db", desc: "Cavaleiro honrado dos Harpers.", motivations: "Proteger Neverwinter", relationships: "Leosin Erlanthar"},
+        {name: "Ontharr Frume", title: "Ordem do Gauntlet - Cavaleiro", faction: "Gauntlet", color: "#e74c3c", desc: "Guerreiro experiente e decidido.", motivations: "Ação militar contra o mal", relationships: "Ulder Ravengard"},
+        {name: "Dagult Neverember", title: "Lords' Alliance - Senhor", faction: "Lords", color: "#f39c12", desc: "Líder político pragmático de Neverwinter.", motivations: "Proteger comércio e cidades", relationships: "Laeral Silverhand"},
+        {name: "Lady Laeral Silverhand", title: "Lords' Alliance - Arcimaga", faction: "Lords", color: "#f39c12", desc: "Poderosa arcimaga de Waterdeep.", motivations: "Estabilidade política", relationships: "Dagult Neverember"},
+        {name: "Taern Hornblade", title: "Lords' Alliance - General", faction: "Lords", color: "#f39c12", desc: "Comandante militar de Waterdeep.", motivations: "Defender as cidades", relationships: "Dagult Neverember"},
+        {name: "Connerad Brawnanvil", title: "Emerald Enclave - Monge", faction: "Enclave", color: "#27ae60", desc: "Monge druidico da Enclave.", motivations: "Preservar a natureza", relationships: "King Melandrach"},
+        {name: "Ulder Ravengard", title: "Ordem do Gauntlet - Capitão", faction: "Gauntlet", color: "#e74c3c", desc: "Guerreiro honrado e determinado.", motivations: "Proteger inocentes", relationships: "Ontharr Frume"},
+        {name: "King Melandrach", title: "Emerald Enclave - Rei Élfico", faction: "Enclave", color: "#27ae60", desc: "Rei da Floresta Misty.", motivations: "Controlar a floresta e a magia", relationships: "Connerad Brawnanvil"},
+        {name: "Remi Haventree", title: "Harpers - Viúva Guerreira", faction: "Harpers", color: "#3498db", desc: "Esposa de Arthagast. Jurou vingança.", motivations: "Vingar a morte do marido", relationships: "Leosin Erlanthar"},
+    ];
+
+    const COMPLETE_EVENTS = [
+        {label: "Kept Skyreach Castle", h:1, o:1, e:1, l:1, c:1, council: "1st"},
+        {label: "Skyreach Returned to Giants", h:-1, o:-1, e:-1, l:1, c:-1, council: "1st"},
+        {label: "Smashed Dragon Hatchery", h:1, o:1, e:0, l:1, c:1, council: "1st"},
+        {label: "Left Hatchery Intact", h:0, o:0, e:0, l:0, c:1, council: "1st"},
+        {label: "Killed/Captured Rezmir", h:1, o:1, e:1, l:1, c:1, council: "1st"},
+        {label: "Killed/Captured Rath Modar", h:1, o:1, e:1, l:1, c:1, council: "1st"},
+        {label: "Leosin Supports Party", h:1, o:1, e:0, l:1, c:1, council: "1st"},
+        {label: "Ontharr Supports Party", h:0, o:1, e:0, l:1, c:1, council: "1st"},
+        {label: "Killed/Captured Varram", h:1, o:1, e:1, l:0, c:1, council: "2nd"},
+        {label: "Arcane Brotherhood Joins", h:1, o:0, e:1, l:0, c:1, council: "2nd"},
+        {label: "Arauthor Killed/Driven", h:0, o:0, e:0, l:0, c:1, council: "2nd"},
+        {label: "Killed/Captured Neronvain", h:1, o:1, e:1, l:0, c:1, council: "2nd"},
+        {label: "Chuth Killed/Driven", h:0, o:0, e:0, l:0, c:1, council: "2nd"},
+        {label: "Rallied Metallic Dragons", h:1, o:1, e:1, l:-1, c:1, council: "2nd"},
+        {label: "Concessions to Dragons", h:-1, o:-1, e:1, l:1, c:-1, council: "2nd"},
+        {label: "Metallic Dragons Aid Territory", h:0, o:1, e:1, l:0, c:1, council: "2nd"},
+        {label: "Defeated at Xonthal's Tower", h:1, o:1, e:1, l:0, c:1, council: "3rd"},
+        {label: "Donated/Sold Xonthal's Tower", h:0, o:1, e:0, l:1, c:1, council: "3rd"},
+        {label: "Brought Thay to Table", h:0, o:0, e:0, l:0, c:1, council: "3rd"},
+        {label: "No Draconic Aid Gained", h:-1, o:-1, e:-1, l:-1, c:-1, council: "3rd"},
+        {label: "Supported by Isteval", h:0, o:1, e:0, l:1, c:1, council: "4th"},
+        {label: "Supported by Laeral", h:0, o:1, e:0, l:1, c:1, council: "4th"},
+        {label: "Defeated Xonthal's Enemies", h:1, o:1, e:1, l:0, c:1, council: "4th"},
+        {label: "Party Delivers Cultist Info", h:1, o:1, e:1, l:0, c:1, council: "4th"},
+    ];
 
     function checkPassword() {
         const password = document.getElementById('password-input').value;
-        const errorMsg = document.getElementById('error-msg');
-
         if (password === MASTER_PASSWORD) {
             localStorage.setItem('tiamat_auth', 'true');
             document.getElementById('login-screen').classList.add('login-hidden');
             document.getElementById('app-container').classList.add('visible');
             load();
         } else {
-            errorMsg.textContent = "❌ Senha Incorreta!";
+            document.getElementById('error-msg').textContent = "❌ Senha Incorreta!";
             document.getElementById('password-input').value = "";
         }
     }
 
     function logout() {
-        if (confirm("Tem a certeza que quer sair?")) {
+        if (confirm("Sair?")) {
             localStorage.removeItem('tiamat_auth');
             document.getElementById('login-screen').classList.remove('login-hidden');
             document.getElementById('app-container').classList.remove('visible');
-            document.getElementById('password-input').value = "";
-            document.getElementById('error-msg').textContent = "";
         }
     }
 
-    // Verificar se já está autenticado
-    window.addEventListener('load', function() {
-        const isAuth = localStorage.getItem('tiamat_auth');
-        if (isAuth === 'true') {
-            document.getElementById('login-screen').classList.add('login-hidden');
-            document.getElementById('app-container').classList.add('visible');
-            load();
-        }
-    });
-
-    // Enter key no password
-    document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.getElementById('password-input');
-        if (passwordInput) {
-            passwordInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    checkPassword();
-                }
-            });
-        }
-    });
-
-    // ===== ESTADO DO APP =====
-    let db = {
-        map: "",
-        sessions: [],
-        npcs: [],
-        council: [
-            {label: "Castelo Skyreach", h:1, m:1, e:1, l:1, z:1, active: false},
-            {label: "Viveiro Destruído", h:1, m:0, e:0, l:1, z:0, active: false}
-        ],
-        magicItems: ""
-    };
-
-    // ===== SALVAMENTO =====
-    function save() {
-        localStorage.setItem('tiamat_data_v5', JSON.stringify(db));
-    }
-
-    function load() {
-        const data = localStorage.getItem('tiamat_data_v5');
-        if (data) db = JSON.parse(data);
-        renderAll();
-    }
-
-    // ===== NAVEGAÇÃO =====
     function switchTab(e, id) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -744,177 +698,246 @@
         e.currentTarget.classList.add('active');
     }
 
-    // ===== SESSÕES =====
-    function handleSessionUpload() {
-        const fileInput = document.getElementById('session-file-input');
-        const titleInput = document.getElementById('session-title');
-        
-        if (!fileInput.files[0]) {
-            alert("Seleciona um ficheiro!");
-            return;
+    function save() {
+        localStorage.setItem('tiamat_data_final', JSON.stringify(db));
+    }
+
+    function load() {
+        const data = localStorage.getItem('tiamat_data_final');
+        if (data) {
+            db = JSON.parse(data);
+        } else {
+            db.council = COMPLETE_EVENTS.map(e => ({...e, active: false}));
         }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            db.sessions.push({
-                title: titleInput.value || fileInput.files[0].name,
-                date: new Date().toLocaleDateString('pt-PT'),
-                content: e.target.result
-            });
-            titleInput.value = "";
-            fileInput.value = "";
-            save();
-            renderSessions();
-        };
-        reader.readAsDataURL(fileInput.files[0]);
+        renderAll();
     }
 
-    function renderSessions() {
-        const list = document.getElementById('session-display-list');
-        list.innerHTML = '';
-        db.sessions.forEach((s, i) => {
-            list.innerHTML += `
-                <div class="session-box">
-                    <div class="session-info">
-                        <strong>${s.title}</strong>
-                        <small>${s.date}</small>
-                    </div>
-                    <div class="session-buttons">
-                        <button class="btn" onclick="downloadSession(${i})">👁️ Ver</button>
-                        <button class="btn btn-del" onclick="deleteSession(${i})">X</button>
-                    </div>
-                </div>`;
-        });
+    function renderAll() {
+        renderCouncil();
+        renderNPCs();
+        renderSessionData();
+        renderCombatants();
+        renderNotes();
+        document.getElementById('magic-items-list').value = db.magicItems || "";
     }
 
-    function downloadSession(i) {
-        const s = db.sessions[i];
-        const link = document.createElement('a');
-        link.href = s.content;
-        link.download = s.title;
-        link.click();
-    }
-
-    function deleteSession(i) {
-        db.sessions.splice(i, 1);
-        save();
-        renderSessions();
-    }
-
-    // ===== CONSELHO =====
     function renderCouncil() {
         const body = document.getElementById('council-table-body');
-        body.innerHTML = '';
-        let t = {h:0, m:0, e:0, l:0, z:0};
+        const councils = {"1st": "PRIMEIRO CONSELHO", "2nd": "SEGUNDO CONSELHO", "3rd": "TERCEIRO CONSELHO", "4th": "QUARTO CONSELHO"};
+
+        let html = '';
+        let currentCouncil = '';
+        let totals = {h:0, o:0, e:0, l:0, c:0};
 
         db.council.forEach((ev, i) => {
-            if (ev.active) {
-                t.h += ev.h;
-                t.m += ev.m;
-                t.e += ev.e;
-                t.l += ev.l;
-                t.z += ev.z;
+            if (ev.council !== currentCouncil) {
+                currentCouncil = ev.council;
+                html += `<tr class="row-council"><td colspan="7">${councils[currentCouncil]}</td></tr>`;
             }
 
-            body.innerHTML += `
-                <tr>
-                    <td class="editable" onclick="editCouncil(${i}, 'label')" style="text-align: left;">${ev.label}</td>
-                    <td class="editable" onclick="editCouncil(${i}, 'h')">${ev.h}</td>
-                    <td class="editable" onclick="editCouncil(${i}, 'm')">${ev.m}</td>
-                    <td class="editable" onclick="editCouncil(${i}, 'e')">${ev.e}</td>
-                    <td class="editable" onclick="editCouncil(${i}, 'l')">${ev.l}</td>
-                    <td class="editable" onclick="editCouncil(${i}, 'z')">${ev.z}</td>
-                    <td><input type="checkbox" ${ev.active?'checked':''} onchange="db.council[${i}].active=!db.council[${i}].active;save();renderCouncil()" style="width:20px; height:20px; cursor: pointer;"></td>
-                    <td><button class="btn-del" onclick="deleteCouncilRow(${i})">X</button></td>
-                </tr>`;
+            if (ev.active) {
+                totals.h += ev.h; totals.o += ev.o; totals.e += ev.e; totals.l += ev.l; totals.c += ev.c;
+            }
+
+            html += `<tr><td style="text-align: left; font-size: 0.8rem;">${ev.label}</td>
+                <td class="editable" onclick="editVal(${i}, 'h')">${ev.h > 0 ? '+' : ''}${ev.h}</td>
+                <td class="editable" onclick="editVal(${i}, 'o')">${ev.o > 0 ? '+' : ''}${ev.o}</td>
+                <td class="editable" onclick="editVal(${i}, 'e')">${ev.e > 0 ? '+' : ''}${ev.e}</td>
+                <td class="editable" onclick="editVal(${i}, 'l')">${ev.l > 0 ? '+' : ''}${ev.l}</td>
+                <td class="editable" onclick="editVal(${i}, 'c')">${ev.c > 0 ? '+' : ''}${ev.c}</td>
+                <td><input type="checkbox" ${ev.active?'checked':''} onchange="db.council[${i}].active=!db.council[${i}].active;save();renderCouncil()" style="width:18px; height:18px;"></td></tr>`;
         });
 
-        document.getElementById('res-h').innerText = t.h;
-        document.getElementById('res-m').innerText = t.m;
-        document.getElementById('res-e').innerText = t.e;
-        document.getElementById('res-l').innerText = t.l;
-        document.getElementById('res-z').innerText = t.z;
+        body.innerHTML = html;
+        document.getElementById('res-h').innerText = totals.h;
+        document.getElementById('res-o').innerText = totals.o;
+        document.getElementById('res-e').innerText = totals.e;
+        document.getElementById('res-l').innerText = totals.l;
+        document.getElementById('res-c').innerText = totals.c;
     }
 
-    function editCouncil(i, field) {
+    function editVal(i, field) {
         let val = prompt(`Editar ${field}:`, db.council[i][field]);
         if (val !== null) {
-            db.council[i][field] = (field !== 'label') ? parseInt(val) || 0 : val;
+            db.council[i][field] = parseInt(val) || 0;
             save();
             renderCouncil();
         }
     }
 
-    function addCouncilRow() {
-        db.council.push({label: "Novo Evento", h:0, m:0, e:0, l:0, z:0, active: false});
-        save();
-        renderCouncil();
+    function renderNPCs() {
+        const display = document.getElementById('npc-display');
+        let html = '';
+
+        const allNpcs = [...MAIN_NPCS, ...db.customNpcs];
+        allNpcs.forEach((npc, i) => {
+            html += `<div class="npc-card" style="border-top-color: ${npc.color}">
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <div class="npc-name">${npc.name}</div>
+                        <div class="npc-title" style="color: ${npc.color};">${npc.title}</div>
+                    </div>
+                    ${i >= MAIN_NPCS.length ? `<button class="btn-danger btn-small" onclick="deleteNPC(${i - MAIN_NPCS.length})">X</button>` : ''}
+                </div>
+                <div class="npc-detail"><strong>Aparência:</strong> ${npc.desc}</div>
+                <div class="npc-detail"><strong>Motivações:</strong> ${npc.motivations}</div>
+                <div class="npc-detail"><strong>Relações:</strong> ${npc.relationships}</div>
+            </div>`;
+        });
+
+        display.innerHTML = html;
     }
 
-    function deleteCouncilRow(i) {
-        db.council.splice(i, 1);
-        save();
-        renderCouncil();
-    }
-
-    // ===== NPCs =====
     function addNewNPC() {
-        const name = document.getElementById('npc-in-name').value.trim();
-        const title = document.getElementById('npc-in-title').value.trim();
-        const color = document.getElementById('npc-in-color').value.trim() || 'var(--gold)';
-        const bio = document.getElementById('npc-in-bio').value.trim();
+        const name = document.getElementById('new-npc-name').value.trim();
+        const title = document.getElementById('new-npc-title').value.trim();
+        const color = document.getElementById('new-npc-color').value.trim() || '#d4af37';
+        const desc = document.getElementById('new-npc-desc').value.trim();
+        const motivations = document.getElementById('new-npc-motivations').value.trim();
+        const relationships = document.getElementById('new-npc-relationships').value.trim();
 
-        if (!name) {
-            alert("Escreve um nome!");
-            return;
-        }
+        if (!name) { alert("Nome é obrigatório!"); return; }
 
-        db.npcs.push({name, title, color, bio});
+        db.customNpcs.push({name, title, color, desc, motivations, relationships});
         save();
         renderNPCs();
-        document.getElementById('npc-in-name').value = "";
-        document.getElementById('npc-in-title').value = "";
-        document.getElementById('npc-in-color').value = "";
-        document.getElementById('npc-in-bio').value = "";
-    }
-
-    function renderNPCs() {
-        const grid = document.getElementById('npc-grid-display');
-        grid.innerHTML = '';
-        db.npcs.forEach((n, i) => {
-            grid.innerHTML += `
-                <div class="card" style="border-top: 5px solid ${n.color}">
-                    <h3 style="justify-content: space-between;">
-                        ${n.name}
-                        <button class="btn-del" onclick="deleteNPC(${i})">X</button>
-                    </h3>
-                    <p style="color: ${n.color}; font-weight: bold; margin: -8px 0 10px 0; font-size: 0.9rem;">${n.title}</p>
-                    <p style="white-space: pre-wrap; font-size: 0.85rem; border-top: 1px solid #333; padding-top: 10px; line-height: 1.4;">${n.bio || "(Sem notas)"}</p>
-                </div>`;
-        });
+        document.getElementById('new-npc-name').value = "";
+        document.getElementById('new-npc-title').value = "";
+        document.getElementById('new-npc-color').value = "";
+        document.getElementById('new-npc-desc').value = "";
+        document.getElementById('new-npc-motivations').value = "";
+        document.getElementById('new-npc-relationships').value = "";
     }
 
     function deleteNPC(i) {
-        db.npcs.splice(i, 1);
+        db.customNpcs.splice(i, 1);
         save();
         renderNPCs();
     }
 
-    // ===== LOOT =====
+    function saveSessionData() {
+        db.sessionData.date = document.getElementById('session-date').value;
+        db.sessionData.summary = document.getElementById('session-summary').value;
+        save();
+        alert("Dados da sessão salvos!");
+    }
+
+    function addPlayer() {
+        const name = document.getElementById('player-name').value.trim();
+        if (!name) return;
+        db.sessionData.players.push(name);
+        document.getElementById('player-name').value = "";
+        save();
+        renderSessionData();
+    }
+
+    function removePlayer(i) {
+        db.sessionData.players.splice(i, 1);
+        save();
+        renderSessionData();
+    }
+
+    function renderSessionData() {
+        const display = document.getElementById('player-list');
+        let html = '';
+        db.sessionData.players.forEach((p, i) => {
+            html += `<div class="player-badge">${p} <span class="remove-player" onclick="removePlayer(${i})">×</span></div>`;
+        });
+        display.innerHTML = html;
+        document.getElementById('session-date').value = db.sessionData.date || '';
+        document.getElementById('session-summary').value = db.sessionData.summary || '';
+    }
+
+    function addCombatant() {
+        const name = document.getElementById('combatant-name').value.trim();
+        const init = parseInt(document.getElementById('combatant-init').value) || 0;
+        const hp = parseInt(document.getElementById('combatant-hp').value) || 0;
+
+        if (!name) return;
+
+        db.combatants.push({name, init, hp, maxHp: hp});
+        db.combatants.sort((a, b) => b.init - a.init);
+        document.getElementById('combatant-name').value = "";
+        document.getElementById('combatant-init').value = "";
+        document.getElementById('combatant-hp').value = "";
+        save();
+        renderCombatants();
+    }
+
+    function updateHp(i, delta) {
+        db.combatants[i].hp = Math.max(0, db.combatants[i].hp + delta);
+        save();
+        renderCombatants();
+    }
+
+    function removeCombatant(i) {
+        db.combatants.splice(i, 1);
+        save();
+        renderCombatants();
+    }
+
+    function clearCombat() {
+        db.combatants = [];
+        save();
+        renderCombatants();
+    }
+
+    function renderCombatants() {
+        const display = document.getElementById('combatant-list');
+        let html = '';
+        db.combatants.forEach((c, i) => {
+            html += `<div class="combatant-item" style="border-left-color: ${c.hp <= c.maxHp * 0.25 ? '#e74c3c' : '#27ae60'};">
+                <div><span class="combatant-name">${c.name}</span></div>
+                <div class="combatant-init">⚡ ${c.init}</div>
+                <div class="combatant-hp">
+                    <button class="btn btn-small" onclick="updateHp(${i}, -1)">-</button>
+                    ${c.hp}/${c.maxHp}
+                    <button class="btn btn-small" onclick="updateHp(${i}, 1)">+</button>
+                    <button class="btn-danger btn-small" onclick="removeCombatant(${i})">X</button>
+                </div>
+            </div>`;
+        });
+        display.innerHTML = html || "<p style='color: #888; text-align: center;'>Nenhum combatente adicionado</p>";
+    }
+
+    function addNote() {
+        const text = document.getElementById('new-note').value.trim();
+        if (!text) return;
+
+        db.notes.unshift({text, date: new Date().toLocaleString('pt-PT')});
+        document.getElementById('new-note').value = "";
+        save();
+        renderNotes();
+    }
+
+    function renderNotes() {
+        const display = document.getElementById('notes-display');
+        let html = '';
+        db.notes.forEach((n, i) => {
+            html += `<div class="note-item">
+                <div class="note-date">${n.date}</div>
+                <div class="note-text">${n.text}</div>
+                <button class="btn-danger btn-small" onclick="deleteNote(${i})" style="margin-top: 8px;">Apagar</button>
+            </div>`;
+        });
+        display.innerHTML = html || "<p style='color: #888; text-align: center;'>Nenhuma nota ainda</p>";
+    }
+
+    function deleteNote(i) {
+        db.notes.splice(i, 1);
+        save();
+        renderNotes();
+    }
+
     function rollLoot() {
         const cr = document.getElementById('loot-cr-sel').value;
-        const out = document.getElementById('loot-res-box');
-        let res = "";
-
         const tables = {
-            h0: ["600 PO + 2 Gemas (10 PO c/uma)", "400 PO + Pergaminho Nível 1", "500 PO + Poção de Cura"],
-            h5: ["Arma +1 + 1200 PO", "Armadura +1 + 1000 PO", "Anel de Proteção + 2000 PO"],
-            h11: ["Arma +2 + 3000 PO", "Armadura +2 + 2500 PO", "Vara de Fogo + 5000 PO"]
+            h0: ["600 PO + 2 Gemas", "400 PO + Pergaminho Nv1", "500 PO + Poção"],
+            h5: ["Arma +1 + 1200 PO", "Armadura +1 + 1000 PO", "Anel Proteção + 2000 PO"],
+            h11: ["Arma +2 + 3000 PO", "Armadura +2 + 2500 PO", "Vara Fogo + 5000 PO"]
         };
-
         const roll = Math.floor(Math.random() * 3);
-        res = tables[cr] ? tables[cr][roll] : "Tabela não existe";
-        out.innerHTML = `<strong>🎲 Resultado:</strong> <br> ${res}`;
+        document.getElementById('loot-res-box').innerText = tables[cr][roll];
     }
 
     function saveItems(v) {
@@ -922,37 +945,30 @@
         save();
     }
 
-    // ===== MAPA =====
-    function uploadMap(e) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            db.map = ev.target.result;
-            document.getElementById('map-img').src = db.map;
-            save();
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    }
-
-    // ===== EXPORT/IMPORT =====
     function exportData() {
-        const dataStr = JSON.stringify(db);
-        const blob = new Blob([dataStr], {type: "application/json"});
+        const json = JSON.stringify(db, null, 2);
+        const blob = new Blob([json], {type: "application/json"});
         const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `TIAMAT_${new Date().getTime()}.json`;
-        link.click();
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `TIAMAT_BACKUP_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
     }
 
-    // ===== RENDER ALL =====
-    function renderAll() {
-        if (db.map) document.getElementById('map-img').src = db.map;
-        document.getElementById('magic-items-list').value = db.magicItems || "";
-        renderSessions();
-        renderCouncil();
-        renderNPCs();
-    }
+    window.addEventListener('load', function() {
+        if (localStorage.getItem('tiamat_auth') === 'true') {
+            document.getElementById('login-screen').classList.add('login-hidden');
+            document.getElementById('app-container').classList.add('visible');
+            load();
+        }
+    });
 
+    document.addEventListener('DOMContentLoaded', function() {
+        const pwd = document.getElementById('password-input');
+        if (pwd) pwd.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+    });
 </script>
 
 </body>
